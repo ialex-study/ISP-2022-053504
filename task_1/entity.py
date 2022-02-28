@@ -1,9 +1,10 @@
+import typing
 import re
 
 
 class TextProcessor:
 
-    def __get_sentences(self, text: str) -> list[str]:
+    def __get_sentences(self, text: str) -> typing.List[str]:
         """Return a list of sentences of the text."""
         text = text.replace("...", ".")
 
@@ -12,7 +13,7 @@ class TextProcessor:
 
         return result
 
-    def __get_words(self, sentence: str) -> list[str]:
+    def __get_words(self, sentence: str) -> typing.List[str]:
         """Return a list of words of the sentence."""
         return re.split(r"\s[-,--]\s|[\,,:,;]\s|\s", sentence)
 

@@ -8,7 +8,7 @@ class View:
 
         self.__text_processor = entity.TextProcessor(self.__text)
 
-    def start(self):
+    def start(self) -> None:
         """Start dialog with user."""
         print(self.__text)
         print(
