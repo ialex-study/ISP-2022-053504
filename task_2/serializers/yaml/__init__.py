@@ -1,7 +1,7 @@
-from typing import IO
-from parser import ISerializer
 import yaml
 import sys
+from typing import IO
+from parser import ISerializer
 
 sys.path.insert(0, "/home/ialex/Documents/ISP-2022-053504/task_2")
 

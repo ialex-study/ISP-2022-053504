@@ -1,8 +1,8 @@
+import toml
+import sys
 from typing import IO, Any, Union
 from parser import ISerializer
 from .constants import STRING_TO_OBJECT_DICT, OBJECT_TO_STRING_DICT
-import toml
-import sys
 
 sys.path.insert(0, "/home/ialex/Documents/ISP-2022-053504/task_2")
 
@@ -17,7 +17,7 @@ class TOML(ISerializer):
 
             for key, value in object.items():
                 result[key] = self._adapt_object_dict(value)
-            
+
             return result
 
         elif object_type is list:
@@ -31,7 +31,7 @@ class TOML(ISerializer):
             return {
                 "None": "None"
             }
-    
+
     def _restore_object_dict(self, object: Any):
         object_type = type(object)
 
@@ -47,7 +47,7 @@ class TOML(ISerializer):
             result = {}
             for key, value in object.items():
                 result[key] = self._restore_object_dict(value)
-            
+
             return result
         else:
             return [self._restore_object_dict(item) for item in object]

@@ -1,7 +1,6 @@
 OBJECT_TO_STRING_DICT = {
     int: "int",
     float: "float",
-    complex: "complex",
     bool: "bool",
     str: "str"
 }
@@ -9,7 +8,6 @@ OBJECT_TO_STRING_DICT = {
 STRING_TO_OBJECT_DICT = {
     "int": int,
     "float": float,
-    "complex": complex,
     "bool": bool,
     "str": str
 }
