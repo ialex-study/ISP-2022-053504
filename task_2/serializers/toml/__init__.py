@@ -1,6 +1,6 @@
 import toml
 import sys
-from typing import IO, Any, Union
+from typing import IO, Any
 from parser import ISerializer
 from .constants import STRING_TO_OBJECT_DICT, OBJECT_TO_STRING_DICT
 
@@ -9,7 +9,7 @@ sys.path.insert(0, "/home/ialex/Documents/ISP-2022-053504/task_2")
 
 class TOML(ISerializer):
 
-    def _adapt_object_dict(self, object: Any):
+    def _adapt_object_dict(self, object: Any) -> Any:
         object_type = type(object)
 
         if object_type is dict:
@@ -27,12 +27,12 @@ class TOML(ISerializer):
             return {
                 OBJECT_TO_STRING_DICT[object_type]: str(object)
             }
-        elif object_type is type(None):
+        elif isinstance(object, type(None)):
             return {
                 "None": "None"
             }
 
-    def _restore_object_dict(self, object: Any):
+    def _restore_object_dict(self, object: Any) -> Any:
         object_type = type(object)
 
         if object_type is dict:

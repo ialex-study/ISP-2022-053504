@@ -1,6 +1,6 @@
 import re
 import sys
-from typing import Any, Union
+from typing import IO, Any
 from parser import ISerializer
 
 sys.path.append("/home/ialex/Documents/ISP-2022-053504/task_2")
@@ -15,8 +15,11 @@ REGEX_DELETING_PATTERN = r"^[\{\[]\n\t*|\t*[\}\]]$"
 
 
 class JSON(ISerializer):
+    """
+    Custom json serializer
+    """
 
-    def _serialize_object(self, object: Any, tab_count=1) -> str:
+    def _serialize_object(self, object: Any, tab_count=0) -> str:
         object_type = type(object)
 
         if object_type is dict:
@@ -31,7 +34,7 @@ class JSON(ISerializer):
         if object_type in (int, float):
             return str(object)
 
-        if object_type is type(None):
+        if isinstance(object, type(None)):
             return NONE_STRING
 
         if object_type is bool:
@@ -39,7 +42,7 @@ class JSON(ISerializer):
 
         raise TypeError(f"Unknown type {object_type}")
 
-    def _serialize_dict(self, object: dict, tab_count=1) -> str:
+    def _serialize_dict(self, object: dict, tab_count=0) -> str:
         result = ""
 
         TABS = '\t' * tab_count
@@ -49,7 +52,7 @@ class JSON(ISerializer):
 
         return "{\n" + result.rstrip(",\n") + "\n" + TABS + "}"
 
-    def _serialize_list(self, object: list, tab_count=1) -> str:
+    def _serialize_list(self, object: list, tab_count=0) -> str:
         result = ""
 
         TABS = '\t' * tab_count
@@ -59,7 +62,7 @@ class JSON(ISerializer):
 
         return "[\n" + result.rstrip(",\n") + "\n" + TABS + "]"
 
-    def _check_value_end(self, char, tmp):
+    def _check_value_end(self, char: str, tmp: str) -> bool:
         return char == '"' and len(tmp) > 0 and tmp[-1] != MONITOR_SYMBOL
 
     def _deserialize_object(self, string: str) -> Any:
@@ -149,7 +152,7 @@ class JSON(ISerializer):
                     tmp += char
 
             char_index += 1
-        
+
         if tmp.strip() != "":
             result[self._deserialize_object(
                 key)] = self._deserialize_object(tmp.strip())
@@ -181,14 +184,15 @@ class JSON(ISerializer):
                 )
             ):
                 tmp = tmp + char
-                result.append(self._deserialize_object(tmp.strip().rstrip(',')))
+                result.append(self._deserialize_object(
+                    tmp.strip().rstrip(',')))
 
                 tmp = ""
                 char_index = string.find(',', char_index)
 
                 if char_index < 0:
                     break
-            
+
             else:
                 if char == '{':
                     brace_count += 1
@@ -202,20 +206,20 @@ class JSON(ISerializer):
                 tmp += char
 
             char_index += 1
-        
+
         if tmp.strip() != "":
             result.append(self._deserialize_object(tmp.strip().rstrip(',')))
 
         return result
 
-    def dump(self, obj, fp):
+    def dump(self, obj: Any, fp: IO) -> None:
         fp.write(self._serialize_object(obj))
 
-    def dumps(self, obj):
+    def dumps(self, obj: Any) -> str:
         return self._serialize_object(obj)
 
-    def load(self, fp):
+    def load(self, fp: IO) -> dict:
         return self._deserialize_object(fp.read())
 
-    def loads(self, s):
+    def loads(self, s: str) -> dict:
         return self._deserialize_object(s)

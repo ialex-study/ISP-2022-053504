@@ -1,11 +1,12 @@
 import math
 import unittest
 import sys
-from ..test_data import Test
+from test_data import Test
 from serializers.json import JSON
 from .__init__ import ComplexSerializer
-from ..test_module import _t
+from test_module import _t
 
+sys.path.append(".")
 sys.path.append("..")
 
 

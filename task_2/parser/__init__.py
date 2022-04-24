@@ -2,7 +2,7 @@ import sys
 import imp
 import inspect
 from abc import ABC, abstractmethod
-from typing import IO, Any, Union
+from typing import IO, Any
 from types import FunctionType, BuiltinFunctionType, CodeType, GetSetDescriptorType, MappingProxyType, MethodDescriptorType, ModuleType, WrapperDescriptorType, CellType
 from .constants import BYTES_TYPE_STRING, CODE_TYPE_STRING, FUNCTION_TYPE_STRING, CLASS_TYPE_STRING, INSTANCE_TYPE_STRING, MODULE_TYPE_STRING
 
@@ -40,7 +40,11 @@ def is_std_lib_module(module: ModuleType) -> bool:
 
 
 class ComplexSerializer():
-    def __init__(self, serializer: ISerializer, test_obj=None):
+    """
+    Serialize complex object types such as class, object, function
+    """
+
+    def __init__(self, serializer: ISerializer, test_obj=None) -> None:
         self._serializer = serializer
 
         if test_obj is not None:
@@ -64,8 +68,7 @@ class ComplexSerializer():
             if (key in __builtins__ or
                     key in (
                         "__builtins__", "__cached__", "__file__"
-                    )
-                ):
+                    )):
                 continue
 
             if key == function.__name__:
@@ -211,7 +214,7 @@ class ComplexSerializer():
 
         return result
 
-    def _deserialize_object(self, obj) -> Any:
+    def _deserialize_object(self, obj: Any) -> Any:
         obj_type = type(obj)
 
         if(obj_type == list):
@@ -289,7 +292,7 @@ class ComplexSerializer():
     def _deserialize_module(self, module_dict: dict) -> ModuleType:
         module_name = module_dict["__name__"]
 
-        if not "members" in module_dict:
+        if "members" not in module_dict:
             return __import__(module_name)
 
         module = imp.new_module(module_name)
@@ -345,8 +348,8 @@ class ComplexSerializer():
     def dumps(self, obj) -> str:
         return self._serializer.dumps(self._serialize_object(obj))
 
-    def load(self, fp: IO):
-        return self._deserialize_object(obj_dict=self._serializer.load(fp))
+    def load(self, fp: IO) -> Any:
+        return self._deserialize_object(self._serializer.load(fp))
 
-    def loads(self, s: str):
+    def loads(self, s: str) -> Any:
         return self._deserialize_object(self._serializer.loads(s))

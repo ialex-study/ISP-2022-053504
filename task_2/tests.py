@@ -1,5 +1,4 @@
 import unittest
-import json
 from serializers.yaml import YAML
 from serializers.toml import TOML
 from serializers.json import JSON

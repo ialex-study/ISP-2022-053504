@@ -2,6 +2,7 @@ import math
 
 d = 5
 
+
 def _t(arg):
     c = 2
 
